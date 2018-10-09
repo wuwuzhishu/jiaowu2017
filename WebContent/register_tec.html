@@ -16,8 +16,13 @@
 		<input type="text" id="userdept" placeholder="请输入部门" name="dept"><br>
 		<label for="userdate">生日</label>
 		<input type="date" id="userdate" name="birth"><br>
+		<!-- <label for="usertype">用户权限</label>
+		<input type="text" id="usertype" placeholder="请输入用户的权限"  name="type"><br> -->
 		<label for="usertype">用户权限</label>
-		<input type="text" id="usertype" placeholder="请输入用户的权限"  name="type"><br>
+		<select id="usertype" name="type">
+			<option value="teacher">教师</option>
+			<option value="admin">管理员</option>
+		</select><br>
 		<input type="submit" value="注册">
 	</form>
 </body>

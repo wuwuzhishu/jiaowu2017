@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import dao.StudentDao;
 import model.Student;
+import model.Teacher;
 import util.DBConnection;
 import util.DateConvert;
 
@@ -95,6 +96,54 @@ public class StudentDaoImpl implements StudentDao{
 		}
 		
 		return flag;
+	}
+
+	@Override
+	public Student getStudentById(String id) {
+		// TODO Auto-generated method stub
+		Student student = null;
+		//1.建立数据库的连接
+		Connection con = DBConnection.getConnection();
+		//2.要执行的SQL语句
+		String sql = "select * from student where stuId=?";
+		//3.声明一个Statement
+		PreparedStatement psm = null;
+		//3.声明一个ResultSet对象
+		ResultSet rs = null;
+		try {
+			//3.创建Statement对象
+			psm = con.prepareStatement(sql);
+			//4.给参数传值
+			psm.setString(1, id);			
+			//5.执行数据查询操作
+			rs = psm.executeQuery();
+			
+			if(rs.next()) {
+				student = new Student();
+				student.setStuId(rs.getString("stuId"));
+				student.setStuName(rs.getString("stuName"));
+				student.setStuMajor(rs.getString("stuMajor"));;
+				student.setStuBirth(rs.getDate("stuBirth"));
+				student.setTypeId(rs.getInt("typeId"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				//6.关闭结果集
+				rs.close();	
+				//6.关闭Statement
+				psm.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//7.关闭连接
+			DBConnection.closeConnection(con);
+		}
+		
+		return student;
 	}
 	
 

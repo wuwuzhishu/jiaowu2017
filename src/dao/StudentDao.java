@@ -7,5 +7,7 @@ public interface StudentDao {
 	boolean register(Student student);
 	//登录方法
 	boolean signin(String id ,String password);
+	
+	Student getStudentById(String name);
 
 }

@@ -23,6 +23,7 @@ public class TeacherDaoImpl implements TeacherDao{
 		String sql = "insert into teacher value(?,?,?,?,?,?)";
 		//3.声明一个Statement
 		PreparedStatement psm = null;
+		
 		try {
 			//3.创建Statement对象
 			psm = con.prepareStatement(sql);
@@ -32,7 +33,7 @@ public class TeacherDaoImpl implements TeacherDao{
 			psm.setString(3, teacher.getTecPwd());//密码
 			psm.setString(4, teacher.getTecDept());//部门
 			psm.setDate(5, DateConvert.dateToSQLDate(teacher.getTecBirth()));//生日
-			psm.setInt(6, 2);
+			psm.setInt(6, teacher.getTypeId());
 			//5.执行数据更新操作
 			int n = psm.executeUpdate();
 			if(n > 0) {
@@ -98,6 +99,98 @@ public class TeacherDaoImpl implements TeacherDao{
 		
 		return flag;
 	}
-	
+
+	@Override
+	public Teacher getTeacherById(String id) {
+		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub
+		Teacher teacher = null;
+		//1.建立数据库的连接
+		Connection con = DBConnection.getConnection();
+		//2.要执行的SQL语句
+		String sql = "select * from teacher where tecId=?";
+		//3.声明一个Statement
+		PreparedStatement psm = null;
+		//3.声明一个ResultSet对象
+		ResultSet rs = null;
+		try {
+			//3.创建Statement对象
+			psm = con.prepareStatement(sql);
+			//4.给参数传值
+			psm.setString(1, id);			
+			//5.执行数据查询操作
+			rs = psm.executeQuery();
+			
+			if(rs.next()) {
+				teacher = new Teacher();
+				teacher.setTecId(rs.getString("tecId"));
+				teacher.setTecName(rs.getString("tecName"));
+				teacher.setTecDept(rs.getString("tecDept"));
+				teacher.setTecBirth(rs.getDate("tecBirth"));
+				teacher.setTypeId(rs.getInt("typeId"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				//6.关闭结果集
+				rs.close();	
+				//6.关闭Statement
+				psm.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//7.关闭连接
+			DBConnection.closeConnection(con);
+		}
+		
+		return teacher;
+	}
+
+	@Override
+	public String getTypeNameByTecId(String name) {
+		// TODO Auto-generated method stub
+		String typeName=null;
+		//1.建立数据库的连接
+		Connection con = DBConnection.getConnection();
+		//2.要执行的SQL语句
+		String sql = "select typeName from usertype,teacher "
+				+ "where usertype.typeId=teacher.typeId and tecId=?" ;
+		//3.声明一个Statement
+		PreparedStatement psm = null;
+		//3.声明一个ResultSet对象
+		ResultSet rs = null;
+		try {
+			//3.创建Statement对象
+			psm = con.prepareStatement(sql);
+			//4.给参数传值
+			psm.setString(1, name);			
+			//5.执行数据查询操作
+			rs = psm.executeQuery();
+			
+			if(rs.next()) {
+				typeName = rs.getString(1);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				//6.关闭结果集
+				rs.close();	
+				//6.关闭Statement
+				psm.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//7.关闭连接
+			DBConnection.closeConnection(con);
+		}
+		return typeName;
+	}
+
 
 }
